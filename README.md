@@ -1,6 +1,6 @@
 ---
 title: YeOldeCut
-emoji: 🎭
+emoji: 🎬
 colorFrom: red
 colorTo: yellow
 sdk: gradio
@@ -15,6 +15,12 @@ tags:
   - gradio
   - text-to-video
   - open-weights
+  - minicpm
+  - track:wood
+  - sponsor:openai
+  - sponsor:openbmb
+  - achievement:offbrand
+  - achievement:demo
 ---
 
 # YeOldeCut
@@ -27,14 +33,14 @@ YeOldeCut takes a breakup, job rejection, investor pass, ghosting message, or sc
 
 - Track: Thousand Token Wood
 - Core output: downloadable MP4 for demos and social sharing
-- Small/open model stack: Gemma director model, FLUX.2 Klein 4B scene generation, VoxCPM2 narration, and MusicGen background score
-- Sponsor hooks: Black Forest Labs for image generation, OpenBMB for narration, and Codex-attributed development for the OpenAI track
+- Small/open model stack: Gemma director model, FLUX.2 Klein 4B scene generation, OpenBMB VoxCPM2 narration from the MiniCPM family, and MusicGen background score
+- Sponsor hooks: OpenBMB/MiniCPM-family narration, Black Forest Labs image generation, and Codex-attributed development for the OpenAI track
 
 ## Local Development
 
 ```bash
-/Users/atlasmoth/.local/bin/uv sync
-/Users/atlasmoth/.local/bin/uv run python app.py
+uv sync
+uv run python app.py
 ```
 
 The app writes generated artifacts under `outputs/<run-id>/`.
