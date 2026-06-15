@@ -1,6 +1,12 @@
 from typing import Any, Dict, Optional, Union
 from pathlib import Path
 import json
+from threading import Lock
+
+from runtime_cache import configure_hf_cache
+
+configure_hf_cache()
+
 import torch
 from transformers import AutoProcessor, AutoModelForMultimodalLM
 
@@ -8,6 +14,35 @@ from director.device import pick_device
 from director.script_utils import (
     build_script_messages,
 )
+
+
+MODEL_ID = "google/gemma-4-E2B-it"
+_DIRECTOR_LOCK = Lock()
+_DIRECTOR_PROCESSOR = None
+_DIRECTOR_MODEL = None
+
+
+def _director_components():
+    global _DIRECTOR_PROCESSOR, _DIRECTOR_MODEL
+
+    if _DIRECTOR_PROCESSOR is not None and _DIRECTOR_MODEL is not None:
+        return _DIRECTOR_PROCESSOR, _DIRECTOR_MODEL
+
+    with _DIRECTOR_LOCK:
+        if _DIRECTOR_PROCESSOR is not None and _DIRECTOR_MODEL is not None:
+            return _DIRECTOR_PROCESSOR, _DIRECTOR_MODEL
+
+        device, float_type = pick_device()
+        processor = AutoProcessor.from_pretrained(MODEL_ID)
+        model = AutoModelForMultimodalLM.from_pretrained(
+            MODEL_ID,
+            dtype=float_type,
+        ).to(device)
+        model.eval()
+
+        _DIRECTOR_PROCESSOR = processor
+        _DIRECTOR_MODEL = model
+        return processor, model
 
 
 def substring_from_first_to_last_brace(s: str) -> str | None:
@@ -26,20 +61,7 @@ def run_model(
     runtime_seconds: int = 60,
     scene_count: int = 8,
 ) -> Optional[Union[Dict[str, Any], str]]:
-    # MODEL_ID = "Qwen/Qwen3.5-4B"
-
-    MODEL_ID = "google/gemma-4-E2B-it"
-
-    device, float_type = pick_device()
-
-    processor = AutoProcessor.from_pretrained(MODEL_ID)
-
-    model = AutoModelForMultimodalLM.from_pretrained(
-        MODEL_ID,
-        dtype=float_type,
-    ).to(device)
-
-    model.eval()
+    processor, model = _director_components()
 
     if not rejection_text and image is None:
         rejection_text = (

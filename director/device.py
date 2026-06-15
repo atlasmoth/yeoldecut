@@ -1,11 +1,4 @@
-import torch
+from runtime_cache import pick_device
 
 
-def pick_device():
-    if torch.cuda.is_available():
-        return "cuda", torch.float16
-
-    if torch.backends.mps.is_available():
-        return "mps", torch.float16
-
-    return "cpu", torch.float32
+__all__ = ["pick_device"]

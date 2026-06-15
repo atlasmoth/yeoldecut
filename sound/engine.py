@@ -1,24 +1,50 @@
+from pathlib import Path
+from threading import Lock
+import uuid
+
+from runtime_cache import configure_hf_cache
+
+configure_hf_cache()
+
 import torch
 from transformers import AutoProcessor, MusicgenForConditionalGeneration
+
 from director.device import pick_device
-from pathlib import Path
 import scipy.io.wavfile
-import uuid
+
+
+MODEL_ID = "facebook/musicgen-medium"
+_MUSIC_LOCK = Lock()
+_MUSIC_PROCESSOR = None
+_MUSIC_MODEL = None
+
+
+def _music_components():
+    global _MUSIC_PROCESSOR, _MUSIC_MODEL
+
+    if _MUSIC_PROCESSOR is not None and _MUSIC_MODEL is not None:
+        return _MUSIC_PROCESSOR, _MUSIC_MODEL
+
+    with _MUSIC_LOCK:
+        if _MUSIC_PROCESSOR is not None and _MUSIC_MODEL is not None:
+            return _MUSIC_PROCESSOR, _MUSIC_MODEL
+
+        device, float_type = pick_device()
+        processor = AutoProcessor.from_pretrained(MODEL_ID)
+        model = MusicgenForConditionalGeneration.from_pretrained(
+            MODEL_ID,
+            torch_dtype=float_type,
+        ).to(device)
+        model.eval()
+
+        _MUSIC_PROCESSOR = processor
+        _MUSIC_MODEL = model
+        return processor, model
 
 
 def generate_sound(text: str, out_dir="outputs") -> str:
-    device, float_type = pick_device()
-
-    MODEL_ID = "facebook/musicgen-medium"
-
-    processor = AutoProcessor.from_pretrained(MODEL_ID)
-
-    model = MusicgenForConditionalGeneration.from_pretrained(
-        MODEL_ID,
-        torch_dtype=float_type,
-    ).to(device)
-
-    model.eval()
+    device, _ = pick_device()
+    processor, model = _music_components()
 
     inputs = processor(
         text=[text],
