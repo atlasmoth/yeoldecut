@@ -1,8 +1,15 @@
 ---
 title: YeOldeCut
+emoji: 🎭
+colorFrom: red
+colorTo: yellow
 sdk: gradio
+sdk_version: "6.18.0"
 app_file: app.py
+python_version: "3.12"
 pinned: false
+suggested_hardware: a10g-small
+short_description: Turn rejection texts into dramatic medieval roast films.
 tags:
   - build-small-hackathon
   - gradio
