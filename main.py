@@ -1063,7 +1063,7 @@ THEATRE_HTML = f"""
           </div>
           <button id="summon" class="call" type="submit"><span id="summonText" class="call-text">Raise the curtain</span></button>
         </form>
-        <p class="whisper">Paste a rejection text or add a screenshot. YeOldeCut turns it into a narrated medieval roast film you can watch and share.</p>
+        <p class="whisper">Paste a breakup, job rejection, investor pass, ghosting message, or screenshot and get a film.</p>
 
         <section id="afterword" class="afterword">
           <div class="review">
