@@ -7,7 +7,6 @@ wheels/
 *.egg-info
 outputs/
 .env
-.cache/
 
 # Virtual environments
 .venv

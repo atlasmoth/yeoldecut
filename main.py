@@ -31,6 +31,8 @@ EXAMPLES = {
     "dating": "I think you are great, but I am not really looking for anything serious right now. I hope you understand.",
     "investor": "We loved the energy, but the fund is going to pass for now. The market feels a little early and we want to see more traction before revisiting.",
 }
+SAMPLE_VIDEO_URL = "https://res.cloudinary.com/dzhtwka6d/video/upload/v1781563310/a7992042-2a8d-44eb-a805-1543c1d0805a_alpzpg.mp4"
+SAMPLE_PROMPT = "I've been lying to myself for months, pretending you were worth my time. You're not. You're selfish, draining, and honestly? A complete embarrassment. The sex was terrible, your 'ambition' is a joke, and I've never met anyone so desperate for validation. Don't text me again — I'm disgusted I ever touched you."
 
 JOBS: dict[str, dict[str, Any]] = {}
 JOBS_LOCK = Lock()
@@ -195,6 +197,14 @@ def _example_attr(key: str) -> str:
     return html.escape(EXAMPLES[key], quote=True)
 
 
+def _sample_prompt_attr() -> str:
+    return html.escape(SAMPLE_PROMPT, quote=True)
+
+
+def _sample_prompt_html() -> str:
+    return html.escape(SAMPLE_PROMPT)
+
+
 THEATRE_HTML = f"""
 <!doctype html>
 <html lang="en">
@@ -310,10 +320,13 @@ THEATRE_HTML = f"""
 
     .marquee {{
       display: flex;
-      justify-content: space-between;
-      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px clamp(22px, 8vw, 76px);
       align-items: center;
-      padding: 6px 6px 0;
+      width: min(760px, 100%);
+      margin: 0 auto;
+      padding: 6px 12px 0;
       color: rgba(240, 216, 165, 0.78);
       text-transform: uppercase;
       font-size: 12px;
@@ -324,6 +337,7 @@ THEATRE_HTML = f"""
       display: inline-flex;
       align-items: center;
       gap: 10px;
+      white-space: nowrap;
     }}
 
     .marquee span::before,
@@ -772,6 +786,121 @@ THEATRE_HTML = f"""
       cursor: not-allowed;
     }}
 
+    .sample-chip {{
+      color: #ffe8b7;
+      background: rgba(20, 7, 5, 0.58);
+      border-color: rgba(224, 173, 87, 0.44);
+    }}
+
+    .sample-copy {{
+      min-width: 0;
+      max-width: 600px;
+    }}
+
+    .sample-kicker {{
+      margin: 0 0 10px;
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }}
+
+    .sample-copy h2 {{
+      max-width: 560px;
+      margin: 0;
+      color: #fff3cf;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(28px, 4.5vw, 56px);
+      line-height: 0.98;
+      text-shadow: 0 6px 0 rgba(67, 22, 14, 0.44), 0 0 42px rgba(224,173,87,0.16);
+    }}
+
+    .sample-prompt-label {{
+      margin: 18px 0 8px;
+      color: rgba(255, 244, 217, 0.52);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }}
+
+    .sample-prompt {{
+      max-width: 600px;
+      margin: 0;
+      padding-left: 18px;
+      border-left: 1px solid rgba(224,173,87,0.58);
+      color: rgba(255, 244, 217, 0.82);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(16px, 1.7vw, 20px);
+      line-height: 1.32;
+    }}
+
+    .sample-load {{
+      margin-top: 16px;
+      border: 1px solid rgba(255, 242, 206, 0.32);
+      border-radius: 999px;
+      padding: 10px 15px;
+      color: #28140c;
+      background: linear-gradient(135deg, rgba(255, 231, 173, 0.96), rgba(214, 152, 62, 0.92));
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 860;
+      box-shadow: 0 14px 34px rgba(0,0,0,0.26), inset 0 1px 0 rgba(255,255,255,0.32);
+    }}
+
+    .sample-load:hover {{
+      transform: translateY(-1px);
+      box-shadow: 0 18px 42px rgba(0,0,0,0.32), inset 0 1px 0 rgba(255,255,255,0.42);
+    }}
+
+    .sample-screen {{
+      position: relative;
+      width: min(100%, 330px);
+      aspect-ratio: 9 / 16;
+      padding: 8px;
+      border-radius: 34px;
+      background:
+        linear-gradient(145deg, rgba(255,231,173,0.72), rgba(127,29,24,0.82) 42%, rgba(18,6,4,0.96));
+      box-shadow: 0 28px 86px rgba(0,0,0,0.58), 0 0 58px rgba(224,173,87,0.14);
+      transform: rotate(1.4deg);
+    }}
+
+    .sample-screen::before {{
+      content: "";
+      position: absolute;
+      inset: -18px;
+      z-index: -1;
+      border-radius: 42px;
+      background: radial-gradient(ellipse at 50% 20%, rgba(224,173,87,0.22), transparent 62%);
+      filter: blur(10px);
+    }}
+
+    .sample-screen video {{
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      border-radius: 27px;
+      background: #050303;
+    }}
+
+    .sample-badge {{
+      position: absolute;
+      left: 18px;
+      top: 18px;
+      border: 1px solid rgba(255, 242, 206, 0.26);
+      border-radius: 999px;
+      padding: 6px 9px;
+      color: #fff2ce;
+      background: rgba(20, 7, 5, 0.64);
+      backdrop-filter: blur(10px);
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      pointer-events: none;
+    }}
+
     @keyframes curtainSweep {{
       0% {{ transform: translateX(-120%); }}
       52%, 100% {{ transform: translateX(120%); }}
@@ -906,6 +1035,41 @@ THEATRE_HTML = f"""
       display: grid;
     }}
 
+    .sample-modal {{
+      z-index: 34;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 22% 18%, rgba(224,173,87,0.18), transparent 22rem),
+        radial-gradient(circle at 70% 0%, rgba(190,73,49,0.18), transparent 24rem),
+        rgba(5, 3, 3, 0.92);
+    }}
+
+    .sample-shell {{
+      width: min(1040px, 100%);
+      max-height: min(92vh, 820px);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(240px, 330px);
+      align-items: center;
+      gap: clamp(24px, 5vw, 58px);
+      overflow-y: auto;
+      padding: 10px 4px;
+    }}
+
+    .sample-shell .sample-copy {{
+      justify-self: end;
+    }}
+
+    .sample-shell .sample-screen {{
+      justify-self: start;
+    }}
+
+    .sample-modal .modal-close {{
+      top: 14px;
+      right: 14px;
+      z-index: 36;
+      background: rgba(20, 7, 5, 0.86);
+    }}
+
     .film-shell {{
       width: min(92vw, 520px);
       max-height: min(92vh, 920px);
@@ -976,6 +1140,35 @@ THEATRE_HTML = f"""
         grid-template-columns: 1fr;
       }}
 
+      .sample-shell {{
+        grid-template-columns: 1fr;
+        justify-items: center;
+        gap: 18px;
+        max-height: calc(100vh - 24px);
+        overflow-y: auto;
+        padding: 48px 8px 24px;
+      }}
+
+      .sample-shell .sample-copy {{
+        justify-self: center;
+        text-align: center;
+      }}
+
+      .sample-copy h2 {{
+        font-size: clamp(30px, 8vw, 42px);
+      }}
+
+      .sample-prompt {{
+        text-align: left;
+        font-size: 15px;
+      }}
+
+      .sample-shell .sample-screen {{
+        justify-self: center;
+        width: min(76vw, 330px);
+        transform: none;
+      }}
+
       .call {{
         width: 100%;
         min-height: 72px;
@@ -993,6 +1186,8 @@ THEATRE_HTML = f"""
 
       .marquee {{
         font-size: 10px;
+        gap: 7px 18px;
+        padding-top: 4px;
       }}
 
       .downloads {{
@@ -1053,11 +1248,11 @@ THEATRE_HTML = f"""
               <button class="chip" type="button" data-example="{_example_attr('job')}">Job letter</button>
               <button class="chip" type="button" data-example="{_example_attr('dating')}">Soft heartbreak</button>
               <button class="chip" type="button" data-example="{_example_attr('investor')}">Investor pass</button>
+              <button id="openSample" class="chip sample-chip" type="button">See sample</button>
             </div>
           </div>
           <button id="summon" class="call" type="submit"><span id="summonText" class="call-text">Raise the curtain</span></button>
         </form>
-        <p class="whisper">Paste a breakup, job rejection, investor pass, ghosting message, or screenshot and get a film.</p>
 
         <section id="afterword" class="afterword">
           <div class="review">
@@ -1070,6 +1265,23 @@ THEATRE_HTML = f"""
       </section>
     </div>
   </main>
+
+  <div id="sampleModal" class="film-modal sample-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Sample generated film">
+    <button id="closeSample" class="modal-close" type="button" aria-label="Close sample">x</button>
+    <div class="sample-shell">
+      <div class="sample-copy">
+        <p class="sample-kicker">Sample from the stage</p>
+        <h2>A finished cut, already sentenced.</h2>
+        <p class="sample-prompt-label">Generation prompt</p>
+        <blockquote class="sample-prompt">{_sample_prompt_html()}</blockquote>
+        <button id="sampleLoad" class="sample-load" type="button" data-example="{_sample_prompt_attr()}">Load this prompt</button>
+      </div>
+      <div class="sample-screen">
+        <span class="sample-badge">Sample MP4</span>
+        <video id="sampleFilm" src="{SAMPLE_VIDEO_URL}" controls playsinline preload="metadata"></video>
+      </div>
+    </div>
+  </div>
 
   <div id="filmModal" class="film-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Generated performance">
     <button id="closeFilm" class="modal-close" type="button" aria-label="Close video">x</button>
@@ -1094,6 +1306,12 @@ THEATRE_HTML = f"""
     const successTitle = document.querySelector("#successTitle");
     const successCopy = document.querySelector("#successCopy");
     const watchFilm = document.querySelector("#watchFilm");
+    const openSample = document.querySelector("#openSample");
+    const sampleModal = document.querySelector("#sampleModal");
+    const closeSample = document.querySelector("#closeSample");
+    const sampleFilm = document.querySelector("#sampleFilm");
+    const sampleLoad = document.querySelector("#sampleLoad");
+    const sampleShell = document.querySelector("#sampleModal .sample-shell");
     const filmModal = document.querySelector("#filmModal");
     const closeFilm = document.querySelector("#closeFilm");
     const film = document.querySelector("#film");
@@ -1170,6 +1388,10 @@ THEATRE_HTML = f"""
       }}, 2800);
     }}
 
+    function hasOpenModal() {{
+      return filmModal.classList.contains("open") || sampleModal.classList.contains("open");
+    }}
+
     function stopTheatreLines() {{
       clearInterval(lineTimer);
       lineTimer = null;
@@ -1188,8 +1410,25 @@ THEATRE_HTML = f"""
       film.pause();
       filmModal.classList.remove("open");
       filmModal.setAttribute("aria-hidden", "true");
-      document.body.classList.remove("modal-open");
+      if (!hasOpenModal()) document.body.classList.remove("modal-open");
       if (returnFocus) watchFilm.focus();
+    }}
+
+    function openSampleModal() {{
+      sampleModal.scrollTop = 0;
+      sampleShell.scrollTop = 0;
+      sampleModal.classList.add("open");
+      sampleModal.setAttribute("aria-hidden", "false");
+      document.body.classList.add("modal-open");
+      sampleFilm.focus();
+    }}
+
+    function closeSampleModal(returnFocus = true) {{
+      sampleFilm.pause();
+      sampleModal.classList.remove("open");
+      sampleModal.setAttribute("aria-hidden", "true");
+      if (!hasOpenModal()) document.body.classList.remove("modal-open");
+      if (returnFocus) openSample.focus();
     }}
 
     document.querySelectorAll("[data-example]").forEach((button) => {{
@@ -1208,11 +1447,19 @@ THEATRE_HTML = f"""
     }});
     watchFilm.addEventListener("click", openFilmModal);
     closeFilm.addEventListener("click", closeFilmModal);
+    openSample.addEventListener("click", openSampleModal);
+    closeSample.addEventListener("click", closeSampleModal);
+    sampleLoad.addEventListener("click", () => closeSampleModal(false));
     filmModal.addEventListener("click", (event) => {{
       if (event.target === filmModal) closeFilmModal();
     }});
+    sampleModal.addEventListener("click", (event) => {{
+      if (event.target === sampleModal) closeSampleModal();
+    }});
     document.addEventListener("keydown", (event) => {{
-      if (event.key === "Escape" && filmModal.classList.contains("open")) closeFilmModal();
+      if (event.key !== "Escape") return;
+      if (sampleModal.classList.contains("open")) closeSampleModal();
+      if (filmModal.classList.contains("open")) closeFilmModal();
     }});
     updateSummonState();
 
@@ -1297,6 +1544,7 @@ THEATRE_HTML = f"""
       currentVideoUrl = "";
       watchFilm.disabled = true;
       closeFilmModal(false);
+      closeSampleModal(false);
       film.removeAttribute("src");
       film.load();
       beginTheatreLines();

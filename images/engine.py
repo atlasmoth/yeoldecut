@@ -1,48 +1,19 @@
-from pathlib import Path
-from threading import Lock
-import uuid
-
-from runtime_cache import configure_hf_cache
-
-configure_hf_cache()
-
 import torch
 from diffusers import Flux2KleinPipeline
-
 from director.device import pick_device
-
-
-MODEL_ID = "black-forest-labs/FLUX.2-klein-4B"
-_PIPE_LOCK = Lock()
-_PIPE = None
-
-
-def _image_pipeline():
-    global _PIPE
-
-    if _PIPE is not None:
-        return _PIPE
-
-    with _PIPE_LOCK:
-        if _PIPE is not None:
-            return _PIPE
-
-        device, float_type = pick_device()
-        pipe = Flux2KleinPipeline.from_pretrained(
-            MODEL_ID,
-            torch_dtype=float_type,
-        )
-        if device == "cuda":
-            pipe.enable_model_cpu_offload()
-        else:
-            pipe.to(device)
-        _PIPE = pipe
-        return pipe
+from pathlib import Path
+import uuid
 
 
 def generate_images(prompts, out_dir="outputs", seed=0):
-    device, _ = pick_device()
-    pipe = _image_pipeline()
+    device, float_type = pick_device()
+
+    pipe = Flux2KleinPipeline.from_pretrained(
+        "black-forest-labs/FLUX.2-klein-4B",
+        torch_dtype=float_type,
+    )
+
+    pipe.enable_model_cpu_offload()
 
     if isinstance(prompts, str):
         prompts = [prompts]

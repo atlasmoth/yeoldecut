@@ -30,6 +30,12 @@ Turn painful rejection texts into dramatic medieval roast films.
 
 YeOldeCut takes a breakup, job rejection, investor pass, ghosting message, or screenshot and turns it into a short MP4: faux-medieval script, generated scene art, narrated voiceover, background score, subtitles, title card, final card, and a share caption.
 
+## Demo Video
+
+<video src="https://res.cloudinary.com/dzhtwka6d/video/upload/v1781563099/YeOldeCut_Demo_q1pv5e.mp4" controls width="100%"></video>
+
+[Watch the demo video](https://res.cloudinary.com/dzhtwka6d/video/upload/v1781563099/YeOldeCut_Demo_q1pv5e.mp4)
+
 ## Build Small Positioning
 
 - Track: Thousand Token Wood

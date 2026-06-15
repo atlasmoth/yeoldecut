@@ -5,10 +5,6 @@ from typing import Any, Callable
 import json
 import uuid
 
-from runtime_cache import configure_hf_cache
-
-configure_hf_cache()
-
 import spaces
 
 from audio.engine import generate_voice
