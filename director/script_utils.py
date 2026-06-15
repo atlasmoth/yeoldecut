@@ -83,11 +83,16 @@ Creative direction:
 - Style: Old English King James Version, faux-medieval, Shakespearean, sarcastic, cinematic, dramatic, funny
 - Roast the message and the situation, the user's vulnerability and shortcomings.
 - Be witty, theatrical, and emotionally validating.
-- The narration should sound good when spoken aloud.
+- The narration will be delivered by a slow, deep baritone voice. Write for that pace.
+- Full narration should be compact: about 110-150 spoken words for a 60 second film.
+- Each scene narration should be one clean sentence, ideally 14-22 words.
+- Avoid dense exposition. Prefer one joke, one emotional beat, or one verdict per scene.
+- The narration should sound good when spoken aloud, with natural pauses and no tongue-twisters.
 - Each scene needs an image_prompt suitable for a text-to-image model.
 - Image prompts should be cinematic, detailed, and visually varied.
 - Do not request text rendering inside generated images except simple title-card vibes.
-- Keep on_screen_text short and let the video editor render it.
+- Keep on_screen_text extremely short: 3-8 words, like a dramatic intertitle.
+- title_card, final_card, and logline should each be short enough to read at a glance.
 - Music should be instrumental and specific.
 
 Voice direction must be generic, for example:

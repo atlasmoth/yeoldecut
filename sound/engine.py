@@ -1,11 +1,12 @@
 import torch
 from transformers import AutoProcessor, MusicgenForConditionalGeneration
 from director.device import pick_device
+from pathlib import Path
 import scipy.io.wavfile
 import uuid
 
 
-def generate_sound(text: str) -> str:
+def generate_sound(text: str, out_dir="outputs") -> str:
     device, float_type = pick_device()
 
     MODEL_ID = "facebook/musicgen-medium"
@@ -36,12 +37,13 @@ def generate_sound(text: str) -> str:
 
     audio = audio_values[0, 0].detach().cpu().float().numpy()
 
-    file_name = f"{uuid.uuid4()}.wav"
+    Path(out_dir).mkdir(parents=True, exist_ok=True)
+    file_name = Path(out_dir) / f"{uuid.uuid4()}.wav"
 
     scipy.io.wavfile.write(
-        file_name,
+        str(file_name),
         rate=sampling_rate,
         data=audio,
     )
 
-    return file_name
+    return str(file_name)
