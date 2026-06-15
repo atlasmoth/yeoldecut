@@ -5,6 +5,8 @@ from typing import Any, Callable
 import json
 import uuid
 
+import spaces
+
 from audio.engine import generate_voice
 from director.engine import run_model
 from images.engine import generate_images
@@ -32,6 +34,7 @@ def _write_script(script: dict[str, Any], out_dir: Path) -> str:
     return str(script_path)
 
 
+@spaces.GPU(duration=600)
 def generate_roast_movie(
     rejection_text: str | None = None,
     image: str | Path | Any | None = None,
