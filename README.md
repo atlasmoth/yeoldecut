@@ -36,6 +36,10 @@ YeOldeCut takes a breakup, job rejection, investor pass, ghosting message, or sc
 
 [Watch the demo video](https://res.cloudinary.com/dzhtwka6d/video/upload/v1781563099/YeOldeCut_Demo_q1pv5e.mp4)
 
+## Launch Post
+
+[Read the launch post on X](https://x.com/c__osuji/status/2066660708855497177)
+
 ## Build Small Positioning
 
 - Track: Thousand Token Wood
