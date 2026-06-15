@@ -1024,7 +1024,7 @@ THEATRE_HTML = f"""
             <div class="sigil">The Royal Theatre of Rejections</div>
             <h1>{APP_TITLE}</h1>
             <p class="tagline">{APP_TAGLINE}</p>
-            <p class="whisper">Bring the message. The curtains will do the rest.</p>
+            <p class="whisper">Paste a rejection text or add a screenshot. YeOldeCut turns it into a narrated medieval roast film you can watch and share.</p>
           </div>
           <div class="success-scene" id="successScene">
             <div class="success-mark" aria-hidden="true">FIN</div>
