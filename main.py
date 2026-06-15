@@ -344,12 +344,6 @@ THEATRE_HTML = f"""
       min-height: clamp(310px, 43vh, 500px);
       border-radius: 0;
       border: 0;
-      background:
-        radial-gradient(ellipse at 50% 72%, rgba(224, 173, 87, 0.22), transparent 26rem),
-        linear-gradient(180deg, rgba(255,255,255,0.04), transparent 24%),
-        transparent;
-      box-shadow:
-        inset 0 -120px 120px rgba(0,0,0,0.2);
     }}
 
     .stage::before {{
