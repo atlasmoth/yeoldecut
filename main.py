@@ -302,7 +302,7 @@ THEATRE_HTML = f"""
     }}
 
     .mast {{
-      min-height: auto;
+      min-height: calc(100vh - 62px);
       display: grid;
       grid-template-rows: auto 1fr auto;
       gap: 14px;
@@ -416,11 +416,13 @@ THEATRE_HTML = f"""
     }}
 
     .whisper {{
-      max-width: 620px;
-      margin: 14px auto 0;
-      color: rgba(240, 216, 165, 0.66);
-      font-size: 15px;
-      line-height: 1.55;
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 2px 12px 0;
+      color: rgba(240, 216, 165, 0.62);
+      text-align: center;
+      font-size: 14px;
+      line-height: 1.45;
     }}
 
     .success-scene {{
@@ -1024,7 +1026,6 @@ THEATRE_HTML = f"""
             <div class="sigil">The Royal Theatre of Rejections</div>
             <h1>{APP_TITLE}</h1>
             <p class="tagline">{APP_TAGLINE}</p>
-            <p class="whisper">Paste a rejection text or add a screenshot. YeOldeCut turns it into a narrated medieval roast film you can watch and share.</p>
           </div>
           <div class="success-scene" id="successScene">
             <div class="success-mark" aria-hidden="true">FIN</div>
@@ -1062,6 +1063,7 @@ THEATRE_HTML = f"""
           </div>
           <button id="summon" class="call" type="submit"><span id="summonText" class="call-text">Raise the curtain</span></button>
         </form>
+        <p class="whisper">Paste a rejection text or add a screenshot. YeOldeCut turns it into a narrated medieval roast film you can watch and share.</p>
 
         <section id="afterword" class="afterword">
           <div class="review">
