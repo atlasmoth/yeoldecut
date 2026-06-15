@@ -19,6 +19,7 @@ tags:
   - track:wood
   - sponsor:openai
   - sponsor:openbmb
+  - achievement:offgrid
   - achievement:offbrand
   - achievement:demo
 ---
@@ -35,6 +36,7 @@ YeOldeCut takes a breakup, job rejection, investor pass, ghosting message, or sc
 - Core output: downloadable MP4 for demos and social sharing
 - Small/open model stack: Gemma director model, FLUX.2 Klein 4B scene generation, OpenBMB VoxCPM2 narration from the MiniCPM family, and MusicGen background score
 - Sponsor hooks: OpenBMB/MiniCPM-family narration, Black Forest Labs image generation, and Codex-attributed development for the OpenAI track
+- Off-grid note: the app does not call hosted model APIs at runtime; generation runs through downloaded open-weight models in the Space process.
 
 ## Local Development
 
