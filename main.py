@@ -1018,6 +1018,91 @@ THEATRE_HTML = f"""
       color: #ffd2c2;
     }}
 
+    .toast-region {{
+      position: fixed;
+      left: 50%;
+      bottom: clamp(18px, 4vw, 34px);
+      z-index: 50;
+      width: min(520px, calc(100vw - 28px));
+      display: grid;
+      gap: 10px;
+      pointer-events: none;
+      transform: translateX(-50%);
+    }}
+
+    .toast {{
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: start;
+      padding: 14px 14px 14px 16px;
+      border: 1px solid rgba(255, 210, 194, 0.26);
+      border-radius: 18px;
+      color: #fff2ce;
+      background:
+        radial-gradient(circle at 14% 0, rgba(255, 231, 173, 0.16), transparent 12rem),
+        rgba(20, 7, 5, 0.92);
+      box-shadow: 0 24px 70px rgba(0,0,0,0.48), inset 0 1px 0 rgba(255,255,255,0.06);
+      backdrop-filter: blur(16px);
+      pointer-events: auto;
+      animation: toastIn 260ms ease both;
+    }}
+
+    .toast::before {{
+      content: "";
+      width: 10px;
+      height: 10px;
+      margin-top: 6px;
+      border-radius: 999px;
+      background: #ffd2c2;
+      box-shadow: 0 0 18px rgba(255, 112, 82, 0.72);
+    }}
+
+    .toast.is-leaving {{
+      animation: toastOut 180ms ease both;
+    }}
+
+    .toast-title {{
+      margin: 0;
+      color: #fff3cf;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1.1;
+    }}
+
+    .toast-copy {{
+      margin: 4px 0 0;
+      color: rgba(255, 244, 217, 0.76);
+      font-size: 14px;
+      line-height: 1.42;
+    }}
+
+    .toast-close {{
+      width: 30px;
+      height: 30px;
+      border: 1px solid rgba(255, 242, 206, 0.18);
+      border-radius: 999px;
+      color: #fff2ce;
+      background: rgba(255, 242, 206, 0.08);
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: 850;
+      line-height: 1;
+    }}
+
+    @keyframes toastIn {{
+      from {{ opacity: 0; transform: translateY(14px) scale(0.98); }}
+      to {{ opacity: 1; transform: translateY(0) scale(1); }}
+    }}
+
+    @keyframes toastOut {{
+      from {{ opacity: 1; transform: translateY(0) scale(1); }}
+      to {{ opacity: 0; transform: translateY(10px) scale(0.98); }}
+    }}
+
     .film-modal {{
       position: fixed;
       inset: 0;
@@ -1197,10 +1282,15 @@ THEATRE_HTML = f"""
       .film-frame {{
         width: min(82vw, 390px);
       }}
+
+      .toast-region {{
+        bottom: 12px;
+      }}
     }}
   </style>
 </head>
 <body>
+  <div id="toastRegion" class="toast-region" aria-live="assertive" aria-atomic="true"></div>
   <main class="theatre">
     <div class="light-cone"></div>
     <div class="house">
@@ -1320,6 +1410,7 @@ THEATRE_HTML = f"""
     const logline = document.querySelector("#logline");
     const caption = document.querySelector("#caption");
     const downloads = document.querySelector("#downloads");
+    const toastRegion = document.querySelector("#toastRegion");
 
     const stageLines = [
       "The house lights fall.",
@@ -1343,6 +1434,61 @@ THEATRE_HTML = f"""
 
     function setSummonText(text) {{
       summonText.textContent = text || idleSummonText;
+    }}
+
+    function cleanErrorMessage(error) {{
+      const raw = String(error?.message || error || "").trim();
+      if (!raw) return "Something backstage tripped. Please try again.";
+
+      if (raw.includes("GPU limit")) {{
+        return "The Space has run out of ZeroGPU time for this request. Try again later, sign in with more quota, or use the demo video while the GPU recovers.";
+      }}
+
+      if (raw.includes("Bring a message or screenshot")) {{
+        return "Paste a message or attach a screenshot before raising the curtain.";
+      }}
+
+      if (raw.includes("director model did not return")) {{
+        return "The director model did not finish the script. Try a shorter message, or run it again in a moment.";
+      }}
+
+      return raw;
+    }}
+
+    function showToast(titleText, bodyText) {{
+      const toast = document.createElement("div");
+      toast.className = "toast";
+      toast.setAttribute("role", "alert");
+
+      const copy = document.createElement("div");
+      const titleLine = document.createElement("p");
+      titleLine.className = "toast-title";
+      titleLine.textContent = titleText;
+      const bodyLine = document.createElement("p");
+      bodyLine.className = "toast-copy";
+      bodyLine.textContent = bodyText;
+      copy.append(titleLine, bodyLine);
+
+      const close = document.createElement("button");
+      close.className = "toast-close";
+      close.type = "button";
+      close.setAttribute("aria-label", "Dismiss notice");
+      close.textContent = "x";
+
+      toast.append(copy, close);
+      toastRegion.replaceChildren(toast);
+
+      let timer = window.setTimeout(() => dismissToast(toast), 9000);
+      close.addEventListener("click", () => {{
+        window.clearTimeout(timer);
+        dismissToast(toast);
+      }});
+    }}
+
+    function dismissToast(toast) {{
+      if (!toast || toast.classList.contains("is-leaving")) return;
+      toast.classList.add("is-leaving");
+      window.setTimeout(() => toast.remove(), 180);
     }}
 
     function updateSummonState() {{
@@ -1505,7 +1651,9 @@ THEATRE_HTML = f"""
         isPerforming = false;
         idleSummonText = "Try the scene again";
         setSummonText(idleSummonText);
-        summon.title = job.error || "The performance collapsed backstage.";
+        const message = cleanErrorMessage(job.error || "The performance collapsed backstage.");
+        summon.title = message;
+        showToast("The performance stumbled", message);
         updateSummonState();
         return;
       }}
@@ -1519,7 +1667,9 @@ THEATRE_HTML = f"""
       isPerforming = false;
       idleSummonText = "Try the scene again";
       setSummonText(idleSummonText);
-      summon.title = error.message || error;
+      const message = cleanErrorMessage(error);
+      summon.title = message;
+      showToast("The performance stumbled", message);
       updateSummonState();
     }}
 
@@ -1527,6 +1677,7 @@ THEATRE_HTML = f"""
       event.preventDefault();
       if (!message.value.trim() && !screenshot.files?.length) {{
         setSummonText("Bring a message first");
+        showToast("Bring the evidence", "Paste a message or attach a screenshot before raising the curtain.");
         setTimeout(() => {{
           if (!isPerforming) setSummonText(idleSummonText);
         }}, 1600);
